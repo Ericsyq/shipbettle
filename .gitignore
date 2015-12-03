@@ -1,57 +1,158 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
+import sys
+import random
+def test_input_seed(a):
+    if a.isdigit()==True:
+        if int(a)<0:
+            return False
+        else:
+            return True
+    else:
+        return False
 
-# C extensions
-*.so
 
-# Distribution / packaging
-.Python
-env/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-*.egg-info/
-.installed.cfg
-*.egg
+def display_board(width,height,dic):
+    symbols=[]
+    for symbol in dic.keys():
+        symbols.append(symbol)
+    symbols.sort()
+    number_ship=len(dic)
+    first_direc=random.choice(['vert','horz'])
+    if first_direc=='vert':
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+    elif first_direc=='horz':
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*,cover
 
-# Translations
-*.mo
-*.pot
+    board=[]
+    row=[]
+    for row_num in range(width+1):
+        if row_num == 0:
+            row.append(' ')
+        else:
+            row.append(row_num-1)
+    board.append(row)
+    row2=[]
+    for height_num in range(height):
+        for row_num2 in range(width+1):
+            if row_num2==0:
+                row2.append(height_num)
+            else:
+                row2.append('*')
+        board.append(row2)
+        row2=[]
+    for a,b in dic.items():
+        for x in b:
+            row=x[0]+1
+            column=x[1]+1
+            board[row][column]=a
+    for line in board:
+        for elem in line:
+            print(elem,end=' ')
+        print(end='\n')
+    return board
 
-# Django stuff:
-*.log
 
-# Sphinx documentation
-docs/_build/
+def ship_test(ship,w,h):
+    for symbol,num in ship.items():
+        for number in num:
+            if number[0][0]==number[1][1]:
+                if number[1][1]-number[0][1]>w-number[0][0]:            
+                    print('Error %s is placed outside of the board. Terminating game.'%(symbol))
+                    sys.exit(0)
+            if number[0][1]==number[1][1]:
+                if number[1][0]-number[0][0]>h-number[0][1]:
+                    print('Error %s is placed outside of the board. Terminating game.'%(symbol))
+                    sys.exit(0)
+    diagonal(ship)
+    place_on_top(ship)
 
-# PyBuilder
-target/
+def test_symbol(symbol):
+    if symbol=='x':
+        sys.exit(0)
+    if symbol == 'X':
+        sys.exit(0)
+    if symbol=='o':
+          sys.exit(0)
+    if symbol == 'O':
+         sys.exit(0)
+    if symbol == '*':
+        sys.exit(0)
+    return
+
+def place_on_top(ship):
+    lis_point=[]
+    for position in ship.values():
+        for position1 in position:
+            if position1 not in lis_point:
+                lis_point.append(position1)
+            else:
+                sys.exit(0)
+    return
+
+def diagonal(ship):
+    for position in ship.values():
+        for position1 in position:
+            row=position1[0]
+            column=position1[1]
+            break
+        for position2 in position:
+            if position2[0]==row or position2[1]==column:
+                pass
+            else:
+                sys.exit(0)
+
+
+
+def test_symbol(symbol,lis_symbol):
+    if symbol in lis_symbol:
+        sys.exit(0)
+    else:
+        return
+
+def ai_choice():
+    print('Choose your AI.')
+    print('1. Random')
+    print('2. Smart')
+    print('3. Cheater')
+
+def main():
+#    seed=input("Enter the seed: ")
+#    test_input_seed(seed)
+#    seed =random.seed(seed)
+#    width=input('Enter the width of the board: ')
+#    height=input('Enter the height of the board: ')
+#    file=input('Enter the name of the file containing your ship placements: ')
+#    ai_choice()
+#    choice=input(' Your choice: ')
+     s=input('file: ')
+     s1=open(s)
+     s2=s1.readlines()
+     ship={}
+     lis_symbol=[]
+     for line in s2:
+         symbol,row1,column1,row2,column2=line.split()
+         test_symbol(symbol)
+         if symbol not in lis_symbol:
+             lis_symbol.append(symbol)
+             ship.update({symbol:[[row1,column1],[row2,column2]]})
+         else:
+             sys.exit(0)
+     ship_test(ship)
+
+
+
+main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
